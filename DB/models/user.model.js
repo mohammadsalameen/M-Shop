@@ -1,4 +1,3 @@
-import { required } from "joi";
 import mongoose, { model, Schema } from "mongoose";
 
 const userSchema = new Schema({
@@ -41,11 +40,12 @@ const userSchema = new Schema({
     },
     role : {
         type : String,
+        role : 'user',
         enum : ["Admin", "User"]
     }
 }, {
     timestamps : true
 });
 
-const userModel = mongoose.models.User || model('User', userSchema);
-export default userModel;
+const UserModel = mongoose.models.User || model('User', userSchema);
+export default UserModel;
