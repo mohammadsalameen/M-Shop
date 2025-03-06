@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import sendEmail from "../../utils/sendEmail.js";
 import jwt from 'jsonwebtoken'
 
-export const register = async(req, res, next) =>{
+export const register = async (req, res, next) =>{
     const {userName, email, password} = req.body;
     const user = await UserModel.findOne({email});
     if(user){
@@ -27,4 +27,29 @@ export const confirmEmail = async (req, res) =>{
     const decoded = jwt.verify(token, process.env.SIGNATURE);
     await UserModel.findOneAndUpdate({email : decoded.email}, {confirmEmail : true});
     return res.status(200).json({message : "success"});
+}
+
+export const login = async (req, res) =>{
+    const {email, password} = req.body;
+    const user = await UserModel.findOne({email});
+
+    if(!user){
+        return res.status(400).json({message : 'invalid data'});
+    }
+    if(!user.confirmEmail){
+        return res.status(400).json({message : 'please confirm your email'});
+    }
+
+    if(user.status == 'not active'){
+        return res.status(400).json({message : 'your account is blocked'});
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+    if(!match){
+        return res.status(400).json({message : 'success'});
+    }
+
+    const token = jwt.sign({id : user._id, userName : user.userName, role : user.role}, process.env.LOGIN_SIGNATURE);
+    return res.status(200).json({message : "success", token});
+
 }
