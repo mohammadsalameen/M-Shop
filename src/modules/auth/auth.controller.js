@@ -13,7 +13,7 @@ export const register = async(req, res, next) =>{
     const html = `
     <div>
         <h1>Welcome ${userName}</h1>
-        <a href = 'http://localhost:6000/auth/confirmEmail/${email}'> Confirm Your Email</a>
+        <a href = 'http://localhost:3000/auth/confirmEmail/${email}'> Confirm Your Email</a>
     </div>`;
 
     await sendEmail(email, 'Confirm Email', html);
