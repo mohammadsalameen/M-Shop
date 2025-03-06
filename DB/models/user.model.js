@@ -42,6 +42,10 @@ const userSchema = new Schema({
         type : String,
         role : 'user',
         enum : ["Admin", "User"]
+    },
+    sendCode : {
+        type : String,
+        default : null
     }
 }, {
     timestamps : true
