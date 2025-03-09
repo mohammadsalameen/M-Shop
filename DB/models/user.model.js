@@ -32,16 +32,16 @@ const userSchema = new Schema({
     },
     gender : {
         type : String,
-        enum : ["Male", "Female"]
+        enum : ["male", "female"]
     },
     status : {
         type : String,
-        enum : ["Active", "Not_Active"]
+        enum : ["active", "not_active"]
     },
     role : {
         type : String,
-        role : 'user',
-        enum : ["Admin", "User"]
+        default : 'user',
+        enum : ["admin", "user"]
     },
     sendCode : {
         type : String,
