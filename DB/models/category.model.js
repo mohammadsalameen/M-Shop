@@ -30,7 +30,8 @@ const categorySchema = new Schema({
         required : true
     },
     mainImage : {
-        type : Object
+        type : Object,
+        required : true
     },
     subImages : [
         {
