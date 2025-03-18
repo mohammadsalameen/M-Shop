@@ -5,16 +5,39 @@ const productSchema = new Schema({
         type : String,
         required : true,
         unique : true,
+        trim : true,
         min : 3,
         max : 20
+    },
+    description : {
+        type : String,
+        required : true,
+    },
+    stock : {
+        type : Number,
+        default : 1
+    },
+    price : {
+        type : Number,
+        required : true
+    },
+    discount : {
+        type : Number,
+        default : 0
     },
     slug : {
         type : String,
         required : true
     },
-    image : {
-        type : Object
+    mainImage : {
+        type : Object,
+        required : true
     },
+    subImages : [
+        {
+            type : Object,
+        }
+    ],
     status : {
         type : String,
         default : 'active',
@@ -24,10 +47,21 @@ const productSchema = new Schema({
         type : Types.ObjectId,
         ref : 'User'
     },
+    colors : [String],
+    sizes : [
+        {
+            type : [String],
+            enum : ['small', 'medium', 'large', 'xlarge']
+        }
+    ],
     updatedBy : {
         type : Types.ObjectId,
         ref : 'User'
-    }
+    },
+    categoryId : {
+        type : Types.ObjectId,
+        ref : 'Category'
+    },
 }, {
     timestamps : true
 });

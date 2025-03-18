@@ -10,7 +10,7 @@ const fileUpload = (customValidation = []) =>{
     const storage = multer.diskStorage({});
 
     function fileFilter(req, file, cb){
-        if(customValidation.includes(file.memeType)){
+        if(customValidation.includes(file.mimetype)){
             cb(null, true);
         }else{
             cb(new Error('invalid file type'), false);
