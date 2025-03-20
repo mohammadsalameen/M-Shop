@@ -41,7 +41,7 @@ export const login = async (req, res) =>{
         return res.status(400).json({message : 'please confirm your email'});
     }
 
-    if(user.status == 'not active'){
+    if(user.status == 'not_active'){
         return res.status(400).json({message : 'your account is blocked'});
     }
 

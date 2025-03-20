@@ -13,7 +13,7 @@ const auth = (accessRoles = []) => {
 
     const user = await UserModel.findById(decoded.id); //to prevent update a token
 
-    if (accessRoles.includes(user.role) == "user") {
+    if (!accessRoles.includes(user.role) == "user") {
       return res.status(400).json({ message: "not auth user" });
     }
 

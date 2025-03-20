@@ -9,5 +9,8 @@ router.post('/create', auth(['admin']), fileUpload(fileValidation.image).fields(
     {name : 'subImages', maxCount : 4}
 ]), productController.createProduct);
 
+router.get('/', auth(['admin']), productController.getProducts);
+router.get('/:id', auth(['admin']), productController.getProductDetails);
+
 
 export default router;

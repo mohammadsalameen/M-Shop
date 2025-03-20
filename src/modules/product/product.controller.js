@@ -7,26 +7,46 @@ export const createProduct = async (req, res) =>{
     const {name, categoryId} = req.body;
     
     const checkCategory = await CategoryModel.findById(categoryId);
-    if(!checkCategory){
-        return res.status(404).json({message : 'category not found'});
-    }
-    
-    req.body.slug = slugify(name);
-    
-    const {secure_url, public_id} = await cloudinary.uploader.upload(req.files.mainImage[0].path, {folder : `M-Shop/products/${name}`});
-    return res.json(req.files);
-    
-    req.body.subImages = [];
-    if(req.files.subImages){
-        for(const file of req.files.subImages){
-            const {secure_url, public_id} = await cloudinary.uploader.upload(file.path, {folder : `M-Shop/products/${name}/subImages`});
-            req.body.subImages.push({secure_url, public_id});
+    try{
+        if(!checkCategory){
+            return res.status(404).json({message : 'category not found'});
         }
+          
+        
+        req.body.slug = slugify(name);
+        
+        const {secure_url, public_id} = await cloudinary.uploader.upload(req.files.mainImage[0].path, {folder : `${process.env.APP_NAME}/products/${name}`});
+        if(!req.files){
+            return res.status(400).json({message : "no files uploaded"});
+        }
+        
+        req.body.subImages = [];
+        if(req.files.subImages){
+            for(const file of req.files.subImages){
+                const {secure_url, public_id} = await cloudinary.uploader.upload(file.path, {folder : `M-Shop/products/${name}/subImages`});
+                req.body.subImages.push({secure_url, public_id});
+            }
+        }
+        req.body.mainImage = {secure_url, public_id};
+        req.body.createdBy = req.id;
+        req.body.updatedBy = req.id;
+        
+        const product = await ProductModel.create(req.body);
+        return res.status(201).json({message : "success", product});
+    }catch(err){
+        return res.status(500).json({message : err.message});
     }
-    req.body.mainImage = {secure_url, public_id};
-    req.body.createdBy = req.id;
-    req.body.updatedBy = req.id;
-    
-    const product = await ProductModel.create(req.body);
-    return res.status(201).json({message : "success", product});
+}
+
+export const getProducts = async (req, res) =>{
+    const products = await ProductModel.find({}).select('name mainImage price discount');
+
+    return res.status(200).json({message : 'success', products})
+}
+
+export const getProductDetails = async (req, res) =>{
+    const {id} = req.params;
+    const product = await ProductModel.findById(id).select('-discount'); // exclude discount from the response 
+
+    return res.status(200).json({message : 'success', product});
 }
