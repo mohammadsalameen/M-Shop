@@ -4,7 +4,7 @@ import cloudinary from "../../utils/cloudinary.js";
 import ProductModel from "../../../DB/models/product.model.js";
 
 export const createProduct = async (req, res) =>{
-    const {name, categoryId} = req.body;
+    const {name, categoryId, discount, price} = req.body;
     
     const checkCategory = await CategoryModel.findById(categoryId);
     try{
@@ -30,7 +30,13 @@ export const createProduct = async (req, res) =>{
         req.body.mainImage = {secure_url, public_id};
         req.body.createdBy = req.id;
         req.body.updatedBy = req.id;
-        
+
+        if(discount){
+            req.body.priceAfterDiscount = price - (price * (discount / 100));
+        } else{
+            req.body.priceAfterDiscount = price;
+        }
+        req.body.priceAfterDiscount = price - (price * ((discount || 0) / 100));
         const product = await ProductModel.create(req.body);
         return res.status(201).json({message : "success", product});
     }catch(err){

@@ -6,7 +6,7 @@ const couponSchema = new Schema({
         required : true,
         unique : true,
     },
-    mount : {
+    amount : {
         type : Number,
         required : true
     },

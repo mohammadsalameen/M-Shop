@@ -25,6 +25,9 @@ const productSchema = new Schema({
         type : Number,
         default : 0
     },
+    priceAfterDiscount : {
+        type : Number
+    },
     slug : {
         type : String,
         required : true

@@ -5,6 +5,7 @@ import categoryRouter from './src/modules/category/category.router.js'
 import productRouter from './src/modules/product/product.router.js'
 import couponRouter from './src/modules/coupon/coupon.router.js'
 import cartRouter from './src/modules/cart/cart.router.js'
+import orderRouter from './src/modules/order/order.router.js'
 
 const initApp = async(app, express) =>{
     app.use(express.json());
@@ -16,6 +17,7 @@ const initApp = async(app, express) =>{
     app.use('/products', productRouter);
     app.use('/coupons', couponRouter);
     app.use('/carts', cartRouter);
+    app.use('/order', orderRouter);
 
     app.get('/', (req, res) =>{
         return res.status(200).json("Welcome ....");
