@@ -96,8 +96,25 @@ export const changeOrderStatus = async (req, res) => {
     if(!order){
         return res.status(404).json({message : 'order not found'});
     }
+    if(order.status == 'delivered'){
+        return res.status(400).json({message : 'can not change status of delivered order'});
+    }
     order.status = req.body.status;
     order.updatedBy = req.id;
     await order.save();
+
+    if(req.body.status == 'canceled'){
+        for(const product of order.products){
+            await ProductModel.updateOne({_id : product.productId},{
+                $inc : {stock : product.quantity}
+            })
+        }
+    }
+
+    if(req.body.coupon){
+        await CouponModel.updateOne({_id : order.couponName}, {
+            $pull : {usedBy : req.id}
+        });
+    }
     return res.status(200).json({message : 'success'});
 }
