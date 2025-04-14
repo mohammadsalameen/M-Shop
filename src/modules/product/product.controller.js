@@ -52,7 +52,7 @@ export const getProducts = async (req, res) =>{
 
 export const getProductDetails = async (req, res) =>{
     const {id} = req.params;
-    const product = await ProductModel.findById(id).select('-discount'); // exclude discount from the response 
+    const product = await ProductModel.findById(id).select('-discount').populate('reviews'); // exclude discount from the response 
 
     return res.status(200).json({message : 'success', product});
 }
